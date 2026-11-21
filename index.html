@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAHFIDZ PRO — DEMO VERSION | Manajemen Tahfidz Al-Qur'an</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              950: '#022c22',
+              900: '#064e3b',
+              800: '#065f46',
+              700: '#047857',
+              600: '#059669',
+              500: '#10b981',
+              100: '#d1fae5',
+              50: '#ecfdf5',
+            },
+            ivory: {
+              50: '#ffffff',
+              100: '#faf9f5',
+              200: '#f3f1ea',
+              300: '#e7e3d6',
+            },
+            gold: {
+              50: '#fef9e7',
+              100: '#fcf0c3',
+              400: '#e5c158',
+              500: '#d4af37',
+              600: '#b48a28',
+              700: '#8f6b1b',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            arabic: ['"Amiri"', 'serif'],
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(6, 78, 59, 0.06)',
+            'gold': '0 8px 24px -4px rgba(212, 175, 55, 0.28)',
+            'modal': '0 25px 50px -12px rgba(2, 44, 34, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Kustomisasi Scrollbar & Utilitas Halus */
+    body {
+      background-color: #faf9f5;
+      color: #1e293b;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f1ea;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #047857;
+    }
+
+    /* Pola Islami Geometris Halus untuk Banner */
+    .islamic-pattern {
+      background-color: #064e3b;
+      background-image: radial-gradient(rgba(212, 175, 55, 0.14) 1px, transparent 1px),
+                        radial-gradient(rgba(16, 185, 129, 0.12) 1px, #064e3b 1px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    /* Animasi Modal */
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    .animate-modal {
+      animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Transisi Tab */
+    .view-section {
+      display: none;
+      animation: fadeSlide 0.25s ease-out;
+    }
+    .view-section.active {
+      display: block;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-emerald-700 selection:text-white">
+
+  <!-- OVERLAY MOBILE SIDEBAR -->
+  <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-emerald-950/50 backdrop-blur-xs z-30 hidden lg:hidden transition-opacity"></div>
+
+  <div class="min-h-screen flex">
+    <!-- ==================== SIDEBAR NAVIGASI ==================== -->
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-emerald-900 text-ivory-100 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-xl lg:shadow-none">
+      
+      <div>
+        <!-- Brand Header -->
+        <div class="p-6 border-b border-emerald-800/80 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-emerald-950 shadow-gold shrink-0">
+              <!-- Ikon Al-Qur'an / Kubah SVG -->
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-extrabold tracking-tight text-white text-lg">TAHFIDZ PRO</span>
+              </div>
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-gold-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse"></span>
+                Demo Version
+              </span>
+            </div>
+          </div>
+          <button onclick="toggleSidebar(false)" class="lg:hidden p-1.5 rounded-lg text-emerald-200 hover:bg-emerald-800" aria-label="Tutup Menu">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Identitas Lembaga Contoh -->
+        <div class="mx-4 mt-4 p-3 rounded-xl bg-emerald-950/60 border border-emerald-800/70">
+          <p class="text-[11px] uppercase tracking-wider text-emerald-300/80 font-medium">Lembaga Contoh</p>
+          <p class="text-sm font-semibold text-white truncate mt-0.5">Pondok Tahfidz Al-Munawwarah</p>
+          <p class="text-xs text-emerald-300 mt-0.5 font-arabic">مَعْهَدُ تَحْفِيظِ الْقُرْآنِ</p>
+        </div>
+
+        <!-- Menu Navigasi -->
+        <nav class="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-290px)]">
+          <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-emerald-300/70 mb-2">Menu Demo (Aktif)</p>
+          
+          <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all bg-emerald-800 text-white shadow-xs">
+            <svg class="w-5 h-5 text-gold-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            <span>Dashboard</span>
+          </button>
+
+          <button onclick="switchTab('santri')" data-tab="santri" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/60 transition-all">
+            <svg class="w-5 h-5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Data Santri</span>
+          </button>
+
+          <button onclick="switchTab('ustaz')" data-tab="ustaz" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/60 transition-all">
+            <svg class="w-5 h-5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>Ustaz & Ustazah</span>
+          </button>
+
+          <button onclick="switchTab('setoran')" data-tab="setoran" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/60 transition-all">
+            <svg class="w-5 h-5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <span>Riwayat Setoran</span>
+          </button>
+
+          <button onclick="switchTab('progres')" data-tab="progres" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/60 transition-all">
+            <svg class="w-5 h-5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <span>Progres Hafalan</span>
+          </button>
+
+          <button onclick="switchTab('laporan')" data-tab="laporan" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/60 transition-all">
+            <svg class="w-5 h-5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Laporan Sederhana</span>
+          </button>
+
+          <!-- Pemisah Menu Terkunci -->
+          <div class="pt-4 pb-1 px-3">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-gold-400/90 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+              Fitur Full Version
+            </p>
+          </div>
+
+          <button onclick="openLockedModal('Absensi Halaqah', 'Catat kehadiran santri dan pengampu pada setiap sesi halaqah (Subuh, Ashar, Maghrib) lengkap dengan rekap izin, sakit, dan persentase kedisiplinan bulanan.')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-200/75 hover:bg-emerald-800/40 hover:text-white transition-all group">
+            <span class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-400/60 group-hover:text-gold-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span>Absensi Halaqah</span>
+            </span>
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/80 border border-gold-500/30 text-[10px] font-semibold text-gold-400">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+              Full
+            </span>
+          </button>
+
+          <button onclick="openLockedModal('Target Hafalan Harian, Mingguan & Bulanan', 'Tetapkan target setoran khusus untuk setiap jenjang atau santri secara fleksibel, serta pantau otomatis santri yang melampaui atau tertinggal dari target lembaga.')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-200/75 hover:bg-emerald-800/40 hover:text-white transition-all group">
+            <span class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-400/60 group-hover:text-gold-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Target Hafalan</span>
+            </span>
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/80 border border-gold-500/30 text-[10px] font-semibold text-gold-400">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+              Full
+            </span>
+          </button>
+
+          <button onclick="openLockedModal('Manajemen Murajaah Lengkap', 'Kelola jadwal pengulangan hafalan lama (Manzil & Sabqi) per juz agar kualitas mutqin santri tetap terjaga dan tidak mudah lupa.')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-200/75 hover:bg-emerald-800/40 hover:text-white transition-all group">
+            <span class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-400/60 group-hover:text-gold-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Manajemen Murajaah</span>
+            </span>
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/80 border border-gold-500/30 text-[10px] font-semibold text-gold-400">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+              Full
+            </span>
+          </button>
+
+          <button onclick="openLockedModal('Pengaturan Identitas Lembaga & Backup', 'Sesuaikan nama pesantren/rumah tahfidz, logo, kop rapor syahadah, serta lakukan pencadangan (backup) dan pemulihan seluruh data aplikasi.')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-emerald-200/75 hover:bg-emerald-800/40 hover:text-white transition-all group">
+            <span class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-400/60 group-hover:text-gold-400 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>Pengaturan Lembaga</span>
+            </span>
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-950/80 border border-gold-500/30 text-[10px] font-semibold text-gold-400">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+              Full
+            </span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Footer CTA Sidebar -->
+      <div class="p-4 border-t border-emerald-800/80 bg-emerald-950/40">
+        <div class="p-3.5 rounded-xl bg-gradient-to-br from-emerald-800 to-emerald-900 border border-gold-500/30">
+          <p class="text-xs font-semibold text-gold-400 mb-1">Mode Percobaan Gratis</p>
+          <p class="text-[11px] text-emerald-100/85 leading-relaxed mb-3">Gunakan Full Version untuk mengelola data santri & laporan secara penuh.</p>
+          <a href="https://wa.me/6285847391275?text=Halo%2C%20saya%20tertarik%20membeli%20Tahfidz%20Pro%20Full%20Version.%20Mohon%20informasi%20fitur%20dan%20harganya." target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-bold text-xs shadow-gold transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+            <span>Upgrade ke Full Version</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==================== KONTEN UTAMA ==================== -->
+    <div class="flex-1 flex flex-col min-w-0">
+      
+      <!-- TOP HEADER -->
+      <header class="sticky top-0 z-20 bg-ivory-50/95 backdrop-blur-md border-b border-ivory-300 px-4 sm:px-6 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          
+          <div class="flex items-center gap-3">
+            <!-- Tombol Hamburger Mobile -->
+            <button onclick="toggleSidebar(true)" class="lg:hidden p-2 rounded-xl bg-ivory-200 text-emerald-900 hover:bg-emerald-100 transition-colors" aria-label="Buka Navigasi">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h1 id="pageTitle" class="text-lg sm:text-xl font-bold text-emerald-950">Dashboard Ringkas</h1>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gold-50 text-gold-700 border border-gold-400/50">
+                  <span class="w-1.5 h-1.5 rounded-full bg-gold-600"></span>
+                  Demo — Fitur Terbatas
+                </span>
+              </div>
+              <p id="pageSubtitle" class="text-xs text-slate-500 hidden sm:block mt-0.5">Pratinjau interaktif sistem manajemen tahfidz Al-Qur'an dengan data contoh</p>
+            </div>
+          </div>
+
+          <!-- Tombol CTA Header -->
+          <div class="flex items-center gap-2.5">
+            <a href="https://wa.me/6285847391275?text=Halo%2C%20saya%20tertarik%20membeli%20Tahfidz%20Pro%20Full%20Version.%20Mohon%20informasi%20fitur%20dan%20harganya." target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm shadow-soft transition-all">
+              <svg class="w-4 h-4 text-gold-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+              <span>Beli Full Version</span>
+            </a>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- MAIN WORKSPACE -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+        <!-- ==================== VIEW 1: DASHBOARD ==================== -->
+        <section id="view-dashboard" class="view-section active space-y-6">
+          
+          <!-- BANNER PROMOSI PREMIUM (Tidak mengganggu penggunaan) -->
+          <div class="islamic-pattern rounded-2xl p-6 sm:p-8 text-white shadow-soft border border-emerald-700/60 relative overflow-hidden">
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div class="max-w-2xl space-y-2.5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/70 border border-gold-500/40 text-gold-400 text-xs font-semibold">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <span>TAHFIDZ PRO FULL VERSION</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                  Nikmati Pengalaman Tahfidz Pro Lebih Lengkap
+                </h2>
+                <p class="text-sm sm:text-base text-emerald-100/90 leading-relaxed">
+                  Buka seluruh fitur manajemen santri, setoran hafalan, murajaah, absensi, target, dan laporan dalam Full Version.
+                </p>
+              </div>
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+                <a href="https://wa.me/6285847391275?text=Halo%2C%20saya%20tertarik%20membeli%20Tahfidz%20Pro%20Full%20Version.%20Mohon%20informasi%20fitur%20dan%20harganya." target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-bold text-sm shadow-gold transition-all">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+                  <span>Beli Full Version via WhatsApp</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 KARTU STATISTIK RINGKAS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <!-- Stat 1 -->
+            <div class="bg-ivory-50 rounded-2xl p-5 border border-ivory-300 shadow-soft flex items-start justify-between">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Santri Aktif</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-1.5">12 <span class="text-xs font-medium text-slate-400">Contoh</span></p>
+                <p class="text-xs text-emerald-700 font-medium mt-2 flex items-center gap-1">
+                  <span>4 Halaqah Tahfidz</span>
+                </p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+            </div>
+
+            <!-- Stat 2 -->
+            <div class="bg-ivory-50 rounded-2xl p-5 border border-ivory-300 shadow-soft flex items-start justify-between">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ustaz & Ustazah</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-1.5">5 <span class="text-xs font-medium text-slate-400">Pengampu</span></p>
+                <p class="text-xs text-emerald-700 font-medium mt-2">
+                  <span>Bersanad & Bersertifikat</span>
+                </p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-gold-50 text-gold-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              </div>
+            </div>
+
+            <!-- Stat 3 -->
+            <div class="bg-ivory-50 rounded-2xl p-5 border border-ivory-300 shadow-soft flex items-start justify-between">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Rata-Rata Hafalan</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-1.5">11.4 <span class="text-xs font-medium text-slate-400">Juz</span></p>
+                <p class="text-xs text-emerald-700 font-medium mt-2">
+                  <span>Tertinggi: 30 Juz (Khatam)</span>
+                </p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+            </div>
+
+            <!-- Stat 4 -->
+            <div class="bg-ivory-50 rounded-2xl p-5 border border-ivory-300 shadow-soft flex items-start justify-between">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Setoran Pekan Ini</p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-1.5">48 <span class="text-xs font-medium text-slate-400">Sesi</span></p>
+                <p class="text-xs text-gold-700 font-medium mt-2">
+                  <span>Ziyadah & Murajaah</span>
+                </p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-gold-50 text-gold-600 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRID TENGAH: SEBARAN CAPAIAN & AKSI CEPAT -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Sebaran Capaian Juz Santri -->
+            <div class="lg:col-span-2 bg-ivory-50 rounded-2xl p-6 border border-ivory-300 shadow-soft">
+              <div class="flex items-center justify-between mb-5">
+                <div>
+                  <h3 class="text-base font-bold text-emerald-950">Sebaran Capaian Juz Santri (Data Contoh)</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">Distribusi jumlah santri berdasarkan rentang juz yang telah dihafal</p>
+                </div>
+                <button onclick="switchTab('progres')" class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 underline underline-offset-4">
+                  Lihat Progres Detail →
+                </button>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-xs font-semibold mb-1.5">
+                    <span class="text-slate-700">1 – 5 Juz (Tingkat Dasar / Juz 'Amma & Tabarak)</span>
+                    <span class="text-emerald-800">4 Santri (33%)</span>
+                  </div>
+                  <div class="w-full h-3 bg-ivory-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-500 rounded-full" style="width: 33%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs font-semibold mb-1.5">
+                    <span class="text-slate-700">6 – 15 Juz (Tingkat Menengah)</span>
+                    <span class="text-emerald-800">5 Santri (42%)</span>
+                  </div>
+                  <div class="w-full h-3 bg-ivory-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-700 rounded-full" style="width: 42%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs font-semibold mb-1.5">
+                    <span class="text-slate-700">16 – 29 Juz (Tingkat Lanjutan)</span>
+                    <span class="text-emerald-800">2 Santri (17%)</span>
+                  </div>
+                  <div class="w-full h-3 bg-ivory-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-gold-500 rounded-full" style="width: 17%"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs font-semibold mb-1.5">
+                    <span class="text-slate-700">30 Juz (Khatam & Mutqin)</span>
+                    <span class="text-gold-700 font-bold">1 Santri (8%)</span>
+                  </div>
+                  <div class="w-full h-3 bg-ivory-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-gold-500 to-gold-600 rounded-full" style="width: 8%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel Aksi Cepat (Demo vs Full Version) -->
+            <div class="bg-ivory-50 rounded-2xl p-6 border border-ivory-300 shadow-soft flex flex-col justify-between">
+              <div>
+                <h3 class="text-base font-bold text-emerald-950">Pintasan Fitur</h3>
+                <p class="text-xs text-slate-500 mt-0.5 mb-4">Coba menu demo atau lihat kemampuan Full Version</p>
+
+                <div class="space-y-2.5">
+                  <button onclick="switchTab('santri')" class="w-full flex items-center justify-between p-3 rounded-xl bg-ivory-100 hover:bg-emerald-50 border border-ivory-300 text-left transition-colors">
+                    <span class="text-xs font-semibold text-emerald-950">Jelajahi Daftar Santri Contoh</span>
+                    <span class="text-xs font-bold text-emerald-700">Buka →</span>
+                  </button>
+
+                  <button onclick="switchTab('setoran')" class="w-full flex items-center justify-between p-3 rounded-xl bg-ivory-100 hover:bg-emerald-50 border border-ivory-300 text-left transition-colors">
+                    <span class="text-xs font-semibold text-emerald-950">Lihat Contoh Riwayat Setoran</span>
+                    <span class="text-xs font-bold text-emerald-700">Buka →</span>
+                  </button>
+
+                  <button onclick="openLockedModal('Input Setoran Hafalan Baru', 'Catat setoran ziyadah maupun murajaah santri secara real-time lengkap dengan pemilihan surah, rentang ayat, predikat nilai, dan catatan musyrif.')" class="w-full flex items-center justify-between p-3 rounded-xl bg-gold-50/70 hover:bg-gold-50 border border-gold-400/40 text-left transition-colors">
+                    <span class="text-xs font-semibold text-slate-800 flex items-center gap-2">
+                      <svg class="w-4 h-4 text-gold-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                      Catat Setoran Hafalan Baru
+                    </span>
+                    <span class="text-[11px] font-bold text-gold-700">Full</span>
+                  </button>
+
+                  <button onclick="openLockedModal('Ekspor Laporan & Rapor Santri', 'Unduh laporan perkembangan tahfidz per santri maupun rekap bulanan lembaga dalam format siap cetak untuk wali santri dan yayasan.')" class="w-full flex items-center justify-between p-3 rounded-xl bg-gold-50/70 hover:bg-gold-50 border border-gold-400/40 text-left transition-colors">
+                    <span class="text-xs font-semibold text-slate-800 flex items-center gap-2">
+                      <svg class="w-4 h-4 text-gold-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                      Ekspor Laporan Lengkap
+                    </span>
+                    <span class="text-[11px] font-bold text-gold-700">Full</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-ivory-300 text-center">
+                <p class="text-[11px] text-slate-500">Data pada halaman ini adalah data demonstrasi lokal.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABEL SETORAN TERBARU DI DASHBOARD -->
+          <div class="bg-ivory-50 rounded-2xl border border-ivory-300 shadow-soft overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-ivory-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 class="text-base font-bold text-emerald-950">Contoh Aktivitas Setoran Terbaru</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Simulasi pencatatan ziyadah dan murajaah harian santri</p>
+              </div>
+              <button onclick="openLockedModal('Input Setoran Hafalan Harian', 'Tambahkan catatan setoran hafalan baru tanpa batas, lengkap dengan riwayat otomatis yang terhubung ke grafik progres santri.')" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-ivory-200 hover:bg-gold-50 text-slate-700 border border-ivory-300 hover:border-gold-400 text-xs font-semibold transition-all">
+                <svg class="w-3.5 h-3.5 text-gold-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                <span>+ Catat Setoran (Full Version)</span>
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-ivory-100 border-b border-ivory-300 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-5">Tanggal</th>
+                    <th class="py-3.5 px-5">Nama Santri</th>
+                    <th class="py-3.5 px-5">Jenis</th>
+                    <th class="py-3.5 px-5">Surah & Ayat</th>
+                    <th class="py-3.5 px-5">Predikat</th>
+                    <th class="py-3.5 px-5">Pengampu</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardRecentTable" class="divide-y divide-ivory-200 text-sm">
+                  <!-- Diisi oleh JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==================== VIEW 2: DATA SANTRI ==================== -->
+        <section id="view-santri" class="view-section space-y-6">
+          <div class="bg-ivory-50 rounded-2xl p-5 sm:p-6 border border-ivory-300 shadow-soft">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-ivory-300">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-emerald-950">Daftar Santri Tahfidz</h2>
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-semibold">Mode Lihat Demo</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Klik pada nama santri untuk melihat detail profil & capaian juz (data contoh).</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2.5">
+                <button onclick="openLockedModal('Tambah Data Santri Baru', 'Daftarkan santri baru tanpa batas beserta biodata lengkap, wali santri, penempatan halaqah, dan riwayat awal hafalan.')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-800/90 hover:bg-emerald-800 text-white text-xs font-semibold shadow-xs transition-all">
+                  <svg class="w-3.5 h-3.5 text-gold-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                  <span>+ Tambah Santri</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter & Pencarian Demo -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-5">
+              <div class="sm:col-span-2 relative">
+                <input type="text" id="searchSantriInput" oninput="renderSantriTable()" placeholder="Cari nama santri atau NIS contoh..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-ivory-100 border border-ivory-300 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white transition-colors" />
+                <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <div>
+                <select id="filterHalaqahSelect" onchange="renderSantriTable()" class="w-full px-3.5 py-2.5 rounded-xl bg-ivory-100 border border-ivory-300 text-sm text-slate-700 focus:outline-none focus:border-emerald-600">
+                  <option value="">Semua Halaqah</option>
+                  <option value="Halaqah Abu Bakar">Halaqah Abu Bakar</option>
+                  <option value="Halaqah Umar bin Khattab">Halaqah Umar bin Khattab</option>
+                  <option value="Halaqah Aisyah">Halaqah Aisyah</option>
+                  <option value="Halaqah Hafshah">Halaqah Hafshah</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Tabel Santri -->
+            <div class="overflow-x-auto rounded-xl border border-ivory-300">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-ivory-100 border-b border-ivory-300 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-4">NIS</th>
+                    <th class="py-3.5 px-4">Nama Santri</th>
+                    <th class="py-3.5 px-4">Halaqah</th>
+                    <th class="py-3.5 px-4">Capaian</th>
+                    <th class="py-3.5 px-4">Hafalan Terakhir</th>
+                    <th class="py-3.5 px-4 text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="santriTableBody" class="divide-y divide-ivory-200 text-sm">
+                  <!-- Diisi oleh JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW 3: USTAZ & USTAZAH ==================== -->
+        <section id="view-ustaz" class="view-section space-y-6">
+          <div class="bg-ivory-50 rounded-2xl p-5 sm:p-6 border border-ivory-300 shadow-soft">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-ivory-300">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-emerald-950">Daftar Ustaz & Ustazah Pengampu</h2>
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-semibold">Data Contoh</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Daftar musyrif dan musyrifah pembimbing halaqah tahfidz Al-Qur'an.</p>
+              </div>
+
+              <button onclick="openLockedModal('Manajemen Ustaz & Ustazah Lengkap', 'Kelola data pengampu tahfidz, pembagian kelompok halaqah, jadwal mengajar, dan rekap kinerja bimbingan santri.')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-800/90 hover:bg-emerald-800 text-white text-xs font-semibold transition-all">
+                <svg class="w-3.5 h-3.5 text-gold-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                <span>+ Tambah Pengampu</span>
+              </button>
+            </div>
+
+            <div id="ustazCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW 4: RIWAYAT SETORAN ==================== -->
+        <section id="view-setoran" class="view-section space-y-6">
+          <div class="bg-ivory-50 rounded-2xl p-5 sm:p-6 border border-ivory-300 shadow-soft">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-ivory-300">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-emerald-950">Riwayat Setoran Hafalan</h2>
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-semibold">Contoh Log</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Catatan setoran Ziyadah (hafalan baru) dan Murajaah (pengulangan) santri.</p>
+              </div>
+
+              <button onclick="openLockedModal('Input & Pengelolaan Setoran Penuh', 'Catat setoran baru setiap hari, edit riwayat jika ada koreksi ayat, dan pantau penilaian tajwid serta kelancaran santri.')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-800/90 hover:bg-emerald-800 text-white text-xs font-semibold transition-all">
+                <svg class="w-3.5 h-3.5 text-gold-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                <span>+ Catat Setoran Baru</span>
+              </button>
+            </div>
+
+            <!-- Pencarian Setoran -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-5">
+              <div class="sm:col-span-2 relative">
+                <input type="text" id="searchSetoranInput" oninput="renderSetoranTable()" placeholder="Cari berdasarkan nama santri atau nama surah..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-ivory-100 border border-ivory-300 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white" />
+                <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <div>
+                <select id="filterJenisSetoran" onchange="renderSetoranTable()" class="w-full px-3.5 py-2.5 rounded-xl bg-ivory-100 border border-ivory-300 text-sm text-slate-700 focus:outline-none focus:border-emerald-600">
+                  <option value="">Semua Jenis Setoran</option>
+                  <option value="Ziyadah">Ziyadah (Hafalan Baru)</option>
+                  <option value="Murajaah">Murajaah (Pengulangan)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-ivory-300">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-ivory-100 border-b border-ivory-300 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-4">Tanggal</th>
+                    <th class="py-3.5 px-4">Santri</th>
+                    <th class="py-3.5 px-4">Jenis</th>
+                    <th class="py-3.5 px-4">Surah & Ayat</th>
+                    <th class="py-3.5 px-4">Predikat</th>
+                    <th class="py-3.5 px-4">Catatan Ustaz</th>
+                    <th class="py-3.5 px-4 text-right">Kelola</th>
+                  </tr>
+                </thead>
+                <tbody id="setoranTableBody" class="divide-y divide-ivory-200 text-sm">
+                  <!-- Diisi oleh JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW 5: PROGRES HAFALAN ==================== -->
+        <section id="view-progres" class="view-section space-y-6">
+          <div class="bg-ivory-50 rounded-2xl p-5 sm:p-6 border border-ivory-300 shadow-soft">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-ivory-300">
+              <div>
+                <h2 class="text-lg font-bold text-emerald-950">Progres Hafalan 30 Juz Santri</h2>
+                <p class="text-xs text-slate-500 mt-1">Visualisasi persentase capaian hafalan setiap santri menuju khatam 30 Juz.</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openLockedModal('Pengaturan Target Hafalan', 'Atur target hafalan harian, mingguan, dan bulanan untuk masing-masing santri atau kelompok halaqah.')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-ivory-200 hover:bg-gold-50 text-slate-700 border border-ivory-300 text-xs font-semibold transition-all">
+                  <svg class="w-3.5 h-3.5 text-gold-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                  <span>Atur Target Hafalan</span>
+                </button>
+                <button onclick="openLockedModal('Manajemen Murajaah Terjadwal', 'Kelola peta juz mutqin dan jadwalkan murajaah berkala agar hafalan santri tidak mudah hilang.')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-ivory-200 hover:bg-gold-50 text-slate-700 border border-ivory-300 text-xs font-semibold transition-all">
+                  <svg class="w-3.5 h-3.5 text-gold-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                  <span>Kelola Murajaah</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="progresListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW 6: LAPORAN SEDERHANA ==================== -->
+        <section id="view-laporan" class="view-section space-y-6">
+          <div class="bg-ivory-50 rounded-2xl p-5 sm:p-6 border border-ivory-300 shadow-soft">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-ivory-300">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-emerald-950">Laporan Perkembangan Tahfidz</h2>
+                  <span class="px-2 py-0.5 rounded-md bg-gold-50 text-gold-700 border border-gold-400/40 text-xs font-semibold">Ringkasan Demo</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Contoh rekapitulasi performa halaqah bulan berjalan (data simulasi).</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openLockedModal('Filter Laporan Lanjutan', 'Saring laporan berdasarkan rentang tanggal kustom, kelompok halaqah, pengampu, kategori nilai, maupun status khatam.')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-ivory-200 hover:bg-gold-50 text-slate-700 border border-ivory-300 text-xs font-semibold transition-all">
+                  <svg class="w-3.5 h-3.5 text-gold-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                  <span>Filter Lanjutan</span>
+                </button>
+                <button onclick="openLockedModal('Ekspor Laporan & Pencadangan Data', 'Unduh laporan perkembangan santri siap cetak serta lakukan pencadangan (backup) seluruh database lembaga secara aman.')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-all">
+                  <svg class="w-3.5 h-3.5 text-gold-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                  <span>Ekspor & Backup Data</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ringkasan Angka Laporan -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+              <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                <p class="text-xs font-medium text-emerald-800">Total Setoran Ziyadah (Bulan Ini)</p>
+                <p class="text-2xl font-extrabold text-emerald-950 mt-1">114 Halaman</p>
+                <p class="text-[11px] text-emerald-700 mt-1">Contoh akumulasi 4 halaqah</p>
+              </div>
+              <div class="p-4 rounded-xl bg-gold-50/70 border border-gold-200">
+                <p class="text-xs font-medium text-gold-700">Total Sesi Murajaah</p>
+                <p class="text-2xl font-extrabold text-emerald-950 mt-1">86 Sesi</p>
+                <p class="text-[11px] text-gold-700 mt-1">89% berpredikat Jayyid Jiddan & Mumtaz</p>
+              </div>
+              <div class="p-4 rounded-xl bg-ivory-100 border border-ivory-300">
+                <p class="text-xs font-medium text-slate-600">Santri Terbaik Bulan Ini</p>
+                <p class="text-lg font-extrabold text-emerald-950 mt-1">Aisyah Humaira</p>
+                <p class="text-[11px] text-emerald-700 mt-1">Khatam 30 Juz • Predikat Mumtaz</p>
+              </div>
+            </div>
+
+            <!-- Tabel Rekap Per Halaqah -->
+            <div class="overflow-x-auto rounded-xl border border-ivory-300">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-ivory-100 border-b border-ivory-300 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-4">Nama Halaqah</th>
+                    <th class="py-3.5 px-4">Pengampu</th>
+                    <th class="py-3.5 px-4">Jumlah Santri</th>
+                    <th class="py-3.5 px-4">Rata-Rata Juz</th>
+                    <th class="py-3.5 px-4">Setoran Bulan Ini</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-ivory-200 text-sm">
+                  <tr class="hover:bg-ivory-100/60">
+                    <td class="py-3.5 px-4 font-semibold text-emerald-950">Halaqah Abu Bakar</td>
+                    <td class="py-3.5 px-4 text-slate-600">Ust. Ahmad Fauzi, Al-Hafizh</td>
+                    <td class="py-3.5 px-4">3 Santri</td>
+                    <td class="py-3.5 px-4 font-semibold text-emerald-700">14.7 Juz</td>
+                    <td class="py-3.5 px-4">34 Halaman</td>
+                  </tr>
+                  <tr class="hover:bg-ivory-100/60">
+                    <td class="py-3.5 px-4 font-semibold text-emerald-950">Halaqah Umar bin Khattab</td>
+                    <td class="py-3.5 px-4 text-slate-600">Ust. Muhammad Ridwan, Lc.</td>
+                    <td class="py-3.5 px-4">3 Santri</td>
+                    <td class="py-3.5 px-4 font-semibold text-emerald-700">8.3 Juz</td>
+                    <td class="py-3.5 px-4">26 Halaman</td>
+                  </tr>
+                  <tr class="hover:bg-ivory-100/60">
+                    <td class="py-3.5 px-4 font-semibold text-emerald-950">Halaqah Aisyah</td>
+                    <td class="py-3.5 px-4 text-slate-600">Ustazah Fatimah Az-Zahra, Al-Hafizhah</td>
+                    <td class="py-3.5 px-4">3 Santri</td>
+                    <td class="py-3.5 px-4 font-semibold text-emerald-700">15.3 Juz</td>
+                    <td class="py-3.5 px-4">31 Halaman</td>
+                  </tr>
+                  <tr class="hover:bg-ivory-100/60">
+                    <td class="py-3.5 px-4 font-semibold text-emerald-950">Halaqah Hafshah</td>
+                    <td class="py-3.5 px-4 text-slate-600">Ustazah Khadijah Nabila, S.Pd.I</td>
+                    <td class="py-3.5 px-4">3 Santri</td>
+                    <td class="py-3.5 px-4 font-semibold text-emerald-700">7.3 Juz</td>
+                    <td class="py-3.5 px-4">23 Halaman</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- FOOTER APLIKASI -->
+      <footer class="border-t border-ivory-300 bg-ivory-50 px-4 sm:px-8 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <p><strong class="text-emerald-900">TAHFIDZ PRO — DEMO VERSION</strong> • Aplikasi Manajemen Tahfidz Al-Qur'an</p>
+          <div class="flex items-center gap-4">
+            <span>Butuh fitur lengkap untuk lembaga Anda?</span>
+            <a href="https://wa.me/6285847391275?text=Halo%2C%20saya%20tertarik%20membeli%20Tahfidz%20Pro%20Full%20Version.%20Mohon%20informasi%20fitur%20dan%20harganya." target="_blank" rel="noopener noreferrer" class="font-bold text-emerald-700 hover:text-emerald-900 underline underline-offset-4">
+              Hubungi via WhatsApp (085847391275)
+            </a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 1: KUNCI FITUR FULL VERSION ==================== -->
+  <div id="lockedModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-emerald-950/65 backdrop-blur-xs" onclick="handleBackdropClick(event, 'lockedModal')">
+    <div class="animate-modal bg-ivory-50 border border-gold-400/50 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-modal relative">
+      
+      <!-- Tombol Tutup Pojok -->
+      <button onclick="closeLockedModal()" class="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-ivory-200 transition-colors" aria-label="Tutup Modal">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Ikon Gembok Premium -->
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 border-2 border-gold-400 flex items-center justify-center text-gold-400 mx-auto shadow-gold">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+
+      <div class="text-center mt-5">
+        <span class="inline-block px-3 py-1 rounded-full bg-gold-50 border border-gold-400/50 text-gold-700 text-[11px] font-bold uppercase tracking-wider">
+          Fitur Terkunci • Demo Version
+        </span>
+
+        <!-- Pesan Wajib Sesuai Spesifikasi -->
+        <h3 class="text-xl font-extrabold text-emerald-950 mt-3 leading-snug">
+          Fitur ini tersedia di Tahfidz Pro Full Version.
+        </h3>
+
+        <!-- Nama Fitur & Penjelasan Manfaat -->
+        <div class="mt-4 p-4 rounded-2xl bg-ivory-100 border border-ivory-300 text-left">
+          <p id="lockedFeatureTitle" class="text-xs font-bold uppercase tracking-wider text-emerald-800">Nama Fitur</p>
+          <p id="lockedFeatureDesc" class="text-sm text-slate-600 mt-1 leading-relaxed">
+            Penjelasan manfaat fitur pada versi penuh.
+          </p>
+        </div>
+      </div>
+
+      <!-- Dua Tombol Aksi Wajib -->
+      <div class="mt-6 flex flex-col gap-2.5">
+        <a href="https://wa.me/6285847391275?text=Halo%2C%20saya%20tertarik%20membeli%20Tahfidz%20Pro%20Full%20Version.%20Mohon%20informasi%20fitur%20dan%20harganya." target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold text-sm shadow-soft transition-all">
+          <svg class="w-5 h-5 text-gold-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+          <span>Hubungi via WhatsApp</span>
+        </a>
+
+        <button onclick="closeLockedModal()" class="w-full px-5 py-3 rounded-xl bg-ivory-200 hover:bg-ivory-300 text-slate-700 font-semibold text-sm transition-colors">
+          Kembali ke Demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: DETAIL PROFIL SANTRI (FITUR DEMO AKTIF) ==================== -->
+  <div id="santriDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-emerald-950/65 backdrop-blur-xs" onclick="handleBackdropClick(event, 'santriDetailModal')">
+    <div class="animate-modal bg-ivory-50 border border-ivory-300 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-modal relative">
+      <button onclick="closeSantriModal()" class="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-ivory-200 transition-colors" aria-label="Tutup Detail">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="flex items-center gap-4">
+        <div id="detailAvatar" class="w-14 h-14 rounded-2xl bg-emerald-800 text-gold-400 font-extrabold text-xl flex items-center justify-center shrink-0">
+          AF
+        </div>
+        <div>
+          <span id="detailNis" class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md">NIS: 2026001</span>
+          <h3 id="detailNama" class="text-lg font-extrabold text-emerald-950 mt-1">Nama Santri</h3>
+          <p id="detailHalaqah" class="text-xs text-slate-500">Halaqah • Pengampu</p>
+        </div>
+      </div>
+
+      <div class="mt-5 p-4 rounded-2xl bg-ivory-100 border border-ivory-300 space-y-3">
+        <div class="flex justify-between text-xs font-semibold">
+          <span class="text-slate-600">Total Hafalan Dikuasai</span>
+          <span id="detailJuzText" class="text-emerald-800 font-bold">15 / 30 Juz (50%)</span>
+        </div>
+        <div class="w-full h-3 bg-ivory-200 rounded-full overflow-hidden">
+          <div id="detailJuzBar" class="h-full bg-gradient-to-r from-emerald-700 to-emerald-500 rounded-full" style="width: 50%"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 pt-2 text-xs">
+          <div>
+            <p class="text-slate-400">Surah Terakhir</p>
+            <p id="detailSurah" class="font-bold text-slate-800 mt-0.5">Al-Kahfi: 1-45</p>
+          </div>
+          <div>
+            <p class="text-slate-400">Predikat Rata-Rata</p>
+            <p id="detailPredikat" class="font-bold text-emerald-700 mt-0.5">Mumtaz</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 flex flex-col sm:flex-row gap-2.5">
+        <button onclick="closeSantriModal(); openLockedModal('Edit Data & Cetak Rapor Santri', 'Ubah data santri, perbarui status halaqah, atau cetak kartu kendali & rapor tahfidz santri ini di Full Version.');" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gold-50 hover:bg-gold-100 text-gold-700 border border-gold-400/50 text-xs font-bold transition-colors">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+          <span>Edit Profil (Full Version)</span>
+        </button>
+        <button onclick="closeSantriModal()" class="px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors">
+          Tutup Pratinjau
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT LOGIKA DEMO ==================== -->
+  <script>
+    // 1. DATA CONTOH REALISTIS (FIKTIF UNTUK DEMONSTRASI)
+    const demoSantri = [
+      { id: 1, nis: '2026001', nama: 'Aisyah Humaira', halaqah: 'Halaqah Aisyah', pengampu: 'Ustazah Fatimah Az-Zahra, Al-Hafizhah', juz: 30, surah: 'An-Nas: 1-6 (Khatam)', predikat: 'Mumtaz', kota: 'Malang' },
+      { id: 2, nis: '2026002', nama: 'Muhammad Zayd Al-Fatih', halaqah: 'Halaqah Abu Bakar', pengampu: 'Ust. Ahmad Fauzi, Al-Hafizh', juz: 22, surah: 'Al-Anbiya: 1-50', predikat: 'Mumtaz', kota: 'Surabaya' },
+      { id: 3, nis: '2026003', nama: 'Hafidz Abdurrahman', halaqah: 'Halaqah Abu Bakar', pengampu: 'Ust. Ahmad Fauzi, Al-Hafizh', juz: 18, surah: 'Al-Kahfi: 1-74', predikat: 'Jayyid Jiddan', kota: 'Sidoarjo' },
+      { id: 4, nis: '2026004', nama: 'Maryam Qonita', halaqah: 'Halaqah Aisyah', pengampu: 'Ustazah Fatimah Az-Zahra, Al-Hafizhah', juz: 12, surah: 'Yusuf: 1-68', predikat: 'Jayyid Jiddan', kota: 'Pasuruan' },
+      { id: 5, nis: '2026005', nama: 'Umar Al-Faruq', halaqah: 'Halaqah Umar bin Khattab', pengampu: 'Ust. Muhammad Ridwan, Lc.', juz: 11, surah: 'Hud: 1-45', predikat: 'Jayyid Jiddan', kota: 'Batu' },
+      { id: 6, nis: '2026006', nama: 'Zahra Salsabila', halaqah: 'Halaqah Hafshah', pengampu: 'Ustazah Khadijah Nabila, S.Pd.I', juz: 10, surah: 'At-Taubah: 1-60', predikat: 'Mumtaz', kota: 'Blitar' },
+      { id: 7, nis: '2026007', nama: 'Bilal bin Rabah Saputra', halaqah: 'Halaqah Umar bin Khattab', pengampu: 'Ust. Muhammad Ridwan, Lc.', juz: 9, surah: 'Al-Anfal: 1-40', predikat: 'Jayyid', kota: 'Kediri' },
+      { id: 8, nis: '2026008', nama: 'Khadijah Nurul Izzah', halaqah: 'Halaqah Hafshah', pengampu: 'Ustazah Khadijah Nabila, S.Pd.I', juz: 8, surah: 'Al-A\'raf: 1-87', predikat: 'Jayyid Jiddan', kota: 'Jombang' },
+      { id: 9, nis: '2026009', nama: 'Salman Al-Farisi', halaqah: 'Halaqah Umar bin Khattab', pengampu: 'Ust. Muhammad Ridwan, Lc.', juz: 5, surah: 'An-Nisa: 1-57', predikat: 'Jayyid', kota: 'Mojokerto' },
+      { id: 10, nis: '2026010', nama: 'Nadia Putri Rahmah', halaqah: 'Halaqah Aisyah', pengampu: 'Ustazah Fatimah Az-Zahra, Al-Hafizhah', juz: 4, surah: 'Ali \'Imran: 1-92', predikat: 'Jayyid Jiddan', kota: 'Probolinggo' },
+      { id: 11, nis: '2026011', nama: 'Ammar Yasir Hidayat', halaqah: 'Halaqah Abu Bakar', pengampu: 'Ust. Ahmad Fauzi, Al-Hafizh', juz: 4, surah: 'Al-Baqarah: 142-252', predikat: 'Jayyid', kota: 'Gresik' },
+      { id: 12, nis: '2026012', nama: 'Sofiyah Azzahra', halaqah: 'Halaqah Hafshah', pengampu: 'Ustazah Khadijah Nabila, S.Pd.I', juz: 4, surah: 'Al-Baqarah: 1-141', predikat: 'Jayyid Jiddan', kota: 'Lumajang' },
+    ];
+
+    const demoUstaz = [
+      { nama: 'Ust. Ahmad Fauzi, Al-Hafizh', spesialisasi: 'Tahfidz 30 Juz & Sanad Riwayat Hafs', halaqah: 'Halaqah Abu Bakar', santriCount: 3, jadwal: 'Ba\'da Subuh & Ba\'da Maghrib' },
+      { nama: 'Ust. Muhammad Ridwan, Lc.', spesialisasi: 'Tahsin, Tajwid & Tahfidz Menengah', halaqah: 'Halaqah Umar bin Khattab', santriCount: 3, jadwal: 'Ba\'da Subuh & Ba\'da Ashar' },
+      { nama: 'Ustazah Fatimah Az-Zahra, Al-Hafizhah', spesialisasi: 'Tahfidz 30 Juz Putri & Murajaah', halaqah: 'Halaqah Aisyah', santriCount: 3, jadwal: 'Ba\'da Subuh & Ba\'da Maghrib' },
+      { nama: 'Ustazah Khadijah Nabila, S.Pd.I', spesialisasi: 'Tahsin Dasar & Tahfidz Pemula Putri', halaqah: 'Halaqah Hafshah', santriCount: 3, jadwal: 'Ba\'da Ashar & Ba\'da Isya' },
+      { nama: 'Ust. Abdul Hakim, M.Pd.', spesialisasi: 'Koordinator Kurikulum & Ujian Syahadah', halaqah: 'Tim Penguji Lembaga', santriCount: 12, jadwal: 'Sabtu & Ahad (Tasmi\' Kubro)' },
+    ];
+
+    const demoSetoran = [
+      { tanggal: '21 Nov 2026', santri: 'Aisyah Humaira', jenis: 'Murajaah', surah: 'Juz 29 (Al-Mulk – Al-Mursalat)', predikat: 'Mumtaz', catatan: 'Sangat lancar, makhraj dan mad terjaga dengan baik.', pengampu: 'Ustazah Fatimah' },
+      { tanggal: '21 Nov 2026', santri: 'Muhammad Zayd Al-Fatih', jenis: 'Ziyadah', surah: 'Al-Anbiya: 30-50', predikat: 'Mumtaz', catatan: 'Hafalan baru kuat, lanjutkan ayat berikutnya.', pengampu: 'Ust. Ahmad Fauzi' },
+      { tanggal: '20 Nov 2026', santri: 'Hafidz Abdurrahman', jenis: 'Ziyadah', surah: 'Al-Kahfi: 55-74', predikat: 'Jayyid Jiddan', catatan: 'Perhatikan panjang ghunnah pada ayat 62.', pengampu: 'Ust. Ahmad Fauzi' },
+      { tanggal: '20 Nov 2026', santri: 'Maryam Qonita', jenis: 'Murajaah', surah: 'Yusuf: 1-50', predikat: 'Jayyid Jiddan', catatan: 'Kelancaran meningkat dibanding pekan lalu.', pengampu: 'Ustazah Fatimah' },
+      { tanggal: '19 Nov 2026', santri: 'Umar Al-Faruq', jenis: 'Ziyadah', surah: 'Hud: 25-45', predikat: 'Jayyid', catatan: 'Ulangi 3 kali pada ayat 38 sebelum menambah halaman.', pengampu: 'Ust. M. Ridwan' },
+      { tanggal: '19 Nov 2026', santri: 'Zahra Salsabila', jenis: 'Ziyadah', surah: 'At-Taubah: 40-60', predikat: 'Mumtaz', catatan: 'Bacaan tartil dan tenang.', pengampu: 'Ustazah Khadijah' },
+      { tanggal: '18 Nov 2026', santri: 'Bilal bin Rabah Saputra', jenis: 'Murajaah', surah: 'Juz 30 (An-Naba – An-Nas)', predikat: 'Jayyid Jiddan', catatan: 'Siap mengikuti tasmi\' 1 juz pekan depan.', pengampu: 'Ust. M. Ridwan' },
+    ];
+
+    // 2. HELPER BADGE PREDIKAT
+    function getPredikatBadge(predikat) {
+      if (predikat === 'Mumtaz') {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">Mumtaz</span>`;
+      } else if (predikat === 'Jayyid Jiddan') {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gold-100 text-gold-700">Jayyid Jiddan</span>`;
+      }
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">${predikat}</span>`;
+    }
+
+    // 3. RENDER TABEL & KARTU
+    function renderDashboardRecent() {
+      const tbody = document.getElementById('dashboardRecentTable');
+      tbody.innerHTML = demoSetoran.slice(0, 5).map(item => `
+        <tr class="hover:bg-ivory-100/70 transition-colors">
+          <td class="py-3.5 px-5 text-xs text-slate-500 whitespace-nowrap">${item.tanggal}</td>
+          <td class="py-3.5 px-5 font-semibold text-emerald-950 whitespace-nowrap">${item.santri}</td>
+          <td class="py-3.5 px-5 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded-md text-xs font-semibold ${item.jenis === 'Ziyadah' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-gold-50 text-gold-700 border border-gold-200'}">
+              ${item.jenis}
+            </span>
+          </td>
+          <td class="py-3.5 px-5 text-slate-700 font-medium">${item.surah}</td>
+          <td class="py-3.5 px-5 whitespace-nowrap">${getPredikatBadge(item.predikat)}</td>
+          <td class="py-3.5 px-5 text-xs text-slate-500 whitespace-nowrap">${item.pengampu}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderSantriTable() {
+      const query = (document.getElementById('searchSantriInput').value || '').toLowerCase();
+      const halaqahFilter = document.getElementById('filterHalaqahSelect').value;
+
+      const filtered = demoSantri.filter(s => {
+        const matchQuery = s.nama.toLowerCase().includes(query) || s.nis.includes(query);
+        const matchHalaqah = !halaqahFilter || s.halaqah === halaqahFilter;
+        return matchQuery && matchHalaqah;
+      });
+
+      const tbody = document.getElementById('santriTableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-sm text-slate-500">Tidak ada santri contoh yang cocok dengan pencarian Anda.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(s => `
+        <tr class="hover:bg-ivory-100/80 transition-colors">
+          <td class="py-3.5 px-4 text-xs font-mono text-slate-500">${s.nis}</td>
+          <td class="py-3.5 px-4">
+            <button onclick="openSantriDetail(${s.id})" class="font-bold text-emerald-950 hover:text-emerald-700 text-left underline decoration-emerald-300 underline-offset-4">
+              ${s.nama}
+            </button>
+            <p class="text-[11px] text-slate-400">Asal: ${s.kota}</p>
+          </td>
+          <td class="py-3.5 px-4 text-xs font-medium text-slate-700">${s.halaqah}</td>
+          <td class="py-3.5 px-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              ${s.juz} Juz
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-xs text-slate-600">${s.surah}</td>
+          <td class="py-3.5 px-4 text-right whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5">
+              <button onclick="openSantriDetail(${s.id})" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold transition-colors">
+                Detail
+              </button>
+              <button onclick="openLockedModal('Edit & Hapus Data Santri', 'Ubah biodata santri, pindahkan kelompok halaqah, atau arsipkan data santri secara penuh di Tahfidz Pro Full Version.')" class="p-1.5 rounded-lg bg-ivory-200 hover:bg-gold-50 text-slate-500 hover:text-gold-700 transition-colors" title="Edit Data (Full Version)">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderUstazCards() {
+      const container = document.getElementById('ustazCardsGrid');
+      container.innerHTML = demoUstaz.map(u => `
+        <div class="p-5 rounded-2xl bg-ivory-100/80 border border-ivory-300 flex flex-col justify-between">
+          <div>
+            <div class="flex items-start justify-between gap-2">
+              <div class="w-11 h-11 rounded-xl bg-emerald-800 text-gold-400 font-bold flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200">
+                ${u.santriCount} Santri Binaan
+              </span>
+            </div>
+            <h3 class="font-bold text-emerald-950 text-base mt-3.5">${u.nama}</h3>
+            <p class="text-xs font-medium text-emerald-700 mt-0.5">${u.spesialisasi}</p>
+            <div class="mt-4 pt-3 border-t border-ivory-300 space-y-1.5 text-xs text-slate-600">
+              <p><span class="text-slate-400">Kelompok:</span> <strong>${u.halaqah}</strong></p>
+              <p><span class="text-slate-400">Jadwal:</span> ${u.jadwal}</p>
+            </div>
+          </div>
+
+          <button onclick="openLockedModal('Kelola Jadwal & Penugasan Ustaz', 'Atur pembagian halaqah, jadwal bimbingan, dan hak akses pengampu secara lengkap pada Full Version.')" class="mt-4 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-gold-50 border border-ivory-300 text-xs font-semibold text-slate-600 hover:text-gold-700 transition-colors">
+            <svg class="w-3.5 h-3.5 text-gold-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <span>Kelola Pengampu (Full)</span>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function renderSetoranTable() {
+      const query = (document.getElementById('searchSetoranInput').value || '').toLowerCase();
+      const jenisFilter = document.getElementById('filterJenisSetoran').value;
+
+      const filtered = demoSetoran.filter(item => {
+        const matchQuery = item.santri.toLowerCase().includes(query) || item.surah.toLowerCase().includes(query);
+        const matchJenis = !jenisFilter || item.jenis === jenisFilter;
+        return matchQuery && matchJenis;
+      });
+
+      const tbody = document.getElementById('setoranTableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-sm text-slate-500">Tidak ada contoh riwayat setoran yang sesuai.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => `
+        <tr class="hover:bg-ivory-100/80 transition-colors">
+          <td class="py-3.5 px-4 text-xs text-slate-500 whitespace-nowrap">${item.tanggal}</td>
+          <td class="py-3.5 px-4 font-semibold text-emerald-950 whitespace-nowrap">${item.santri}</td>
+          <td class="py-3.5 px-4 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded-md text-xs font-semibold ${item.jenis === 'Ziyadah' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-gold-50 text-gold-700 border border-gold-200'}">
+              ${item.jenis}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-slate-700 font-medium">${item.surah}</td>
+          <td class="py-3.5 px-4 whitespace-nowrap">${getPredikatBadge(item.predikat)}</td>
+          <td class="py-3.5 px-4 text-xs text-slate-500 max-w-xs">${item.catatan}</td>
+          <td class="py-3.5 px-4 text-right whitespace-nowrap">
+            <button onclick="openLockedModal('Edit & Hapus Riwayat Setoran', 'Koreksi data setoran ayat atau kelola riwayat penilaian hafalan santri pada Tahfidz Pro Full Version.')" class="p-1.5 rounded-lg bg-ivory-200 hover:bg-gold-50 text-slate-500 hover:text-gold-700 transition-colors" title="Terkunci di Demo">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderProgresList() {
+      const container = document.getElementById('progresListContainer');
+      container.innerHTML = demoSantri.map(s => {
+        const pct = Math.round((s.juz / 30) * 100);
+        const isKhatam = s.juz === 30;
+        return `
+          <div class="p-4 rounded-2xl bg-ivory-100/80 border ${isKhatam ? 'border-gold-400 bg-gold-50/30' : 'border-ivory-300'}">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <h4 class="font-bold text-emerald-950 text-sm">${s.nama}</h4>
+                <p class="text-[11px] text-slate-500">${s.halaqah}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-sm font-extrabold ${isKhatam ? 'text-gold-700' : 'text-emerald-800'}">${s.juz} / 30 Juz</span>
+                <p class="text-[11px] font-semibold text-slate-400">${pct}% Selesai</p>
+              </div>
+            </div>
+            <div class="w-full h-2.5 bg-ivory-200 rounded-full overflow-hidden mt-3">
+              <div class="h-full rounded-full ${isKhatam ? 'bg-gradient-to-r from-gold-500 to-gold-600' : 'bg-emerald-700'}" style="width: ${pct}%"></div>
+            </div>
+            <div class="flex items-center justify-between mt-2.5 text-[11px] text-slate-500">
+              <span>Terakhir: <strong class="text-slate-700">${s.surah}</strong></span>
+              <button onclick="openSantriDetail(${s.id})" class="font-semibold text-emerald-700 hover:underline">Rincian →</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 4. NAVIGASI TAB & SIDEBAR RESPONSIF
+    const tabMeta = {
+      dashboard: { title: 'Dashboard Ringkas', subtitle: 'Pratinjau interaktif sistem manajemen tahfidz Al-Qur\'an dengan data contoh' },
+      santri: { title: 'Data Santri (Demo)', subtitle: 'Melihat daftar santri contoh, filter halaqah, dan pratinjau profil hafalan' },
+      ustaz: { title: 'Ustaz & Ustazah (Demo)', subtitle: 'Informasi musyrif/musyrifah pengampu halaqah tahfidz (data contoh)' },
+      setoran: { title: 'Riwayat Setoran (Demo)', subtitle: 'Contoh log setoran ziyadah dan murajaah santri beserta catatan pengampu' },
+      progres: { title: 'Progres Hafalan (Demo)', subtitle: 'Visualisasi capaian hafalan 30 Juz santri pada versi percobaan' },
+      laporan: { title: 'Laporan Sederhana (Demo)', subtitle: 'Ringkasan statistik capaian lembaga (ekspor lengkap tersedia di Full Version)' },
+    };
+
+    function switchTab(tabId) {
+      // Sembunyikan semua section
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+      const target = document.getElementById('view-' + tabId);
+      if (target) target.classList.add('active');
+
+      // Perbarui status tombol sidebar
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.classList.add('bg-emerald-800', 'text-white', 'shadow-xs');
+          btn.classList.remove('text-emerald-100', 'hover:bg-emerald-800/60');
+        } else {
+          btn.classList.remove('bg-emerald-800', 'text-white', 'shadow-xs');
+          btn.classList.add('text-emerald-100', 'hover:bg-emerald-800/60');
+        }
+      });
+
+      // Update judul header
+      if (tabMeta[tabId]) {
+        document.getElementById('pageTitle').textContent = tabMeta[tabId].title;
+        document.getElementById('pageSubtitle').textContent = tabMeta[tabId].subtitle;
+      }
+
+      // Simpan tab aktif terakhir di localStorage secara aman
+      try {
+        localStorage.setItem('tahfidz_pro_demo_tab', tabId);
+      } catch (e) {}
+
+      // Tutup sidebar di mobile
+      toggleSidebar(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleSidebar(open) {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (open) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // 5. MEKANISME MODAL PENGUNCIAN FITUR FULL VERSION
+    function openLockedModal(featureName, featureDesc) {
+      document.getElementById('lockedFeatureTitle').textContent = featureName;
+      document.getElementById('lockedFeatureDesc').textContent = featureDesc;
+      const modal = document.getElementById('lockedModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeLockedModal() {
+      const modal = document.getElementById('lockedModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // 6. MODAL DETAIL SANTRI (FITUR DEMO AKTIF)
+    function openSantriDetail(id) {
+      const santri = demoSantri.find(s => s.id === id);
+      if (!santri) return;
+
+      const initials = santri.nama.split(' ').slice(0, 2).map(n => n[0]).join('');
+      const pct = Math.round((santri.juz / 30) * 100);
+
+      document.getElementById('detailAvatar').textContent = initials;
+      document.getElementById('detailNis').textContent = 'NIS: ' + santri.nis + ' • Contoh';
+      document.getElementById('detailNama').textContent = santri.nama;
+      document.getElementById('detailHalaqah').textContent = `${santri.halaqah} • ${santri.pengampu}`;
+      document.getElementById('detailJuzText').textContent = `${santri.juz} / 30 Juz (${pct}%)`;
+      document.getElementById('detailJuzBar').style.width = pct + '%';
+      document.getElementById('detailSurah').textContent = santri.surah;
+      document.getElementById('detailPredikat').textContent = santri.predikat;
+
+      const modal = document.getElementById('santriDetailModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSantriModal() {
+      const modal = document.getElementById('santriDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function handleBackdropClick(event, modalId) {
+      if (event.target.id === modalId) {
+        if (modalId === 'lockedModal') closeLockedModal();
+        if (modalId === 'santriDetailModal') closeSantriModal();
+      }
+    }
+
+    // Tutup modal dengan tombol Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeLockedModal();
+        closeSantriModal();
+        toggleSidebar(false);
+      }
+    });
+
+    // 7. INISIALISASI SAAT HALAMAN DIMUAT
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDashboardRecent();
+      renderSantriTable();
+      renderUstazCards();
+      renderSetoranTable();
+      renderProgresList();
+
+      // Pulihkan tab terakhir dari localStorage jika ada
+      try {
+        const savedTab = localStorage.getItem('tahfidz_pro_demo_tab');
+        if (savedTab && tabMeta[savedTab]) {
+          switchTab(savedTab);
+        }
+      } catch (e) {}
+    });
+  </script>
+</body>
+</html>
